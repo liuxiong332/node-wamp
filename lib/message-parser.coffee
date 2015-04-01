@@ -1,13 +1,6 @@
 _ = require 'lodash'
 {messageTypeMap, messageDef} = require './message-types'
 
-typeConversion =
-  'typekey': (val) -> parseInt _.findKey(messageTypeMap, (type) -> type is val)
-  'dict': (val, opt) ->
-    if opt?.optional and _.isEqual(val, {}) then undefined else val
-  'list': (val, opt) ->
-    if opt?.optional and _.isEqual(val, []) then undefined else val
-
 class MessageConstruct
   constructor: (@structure) ->
 
@@ -67,7 +60,10 @@ class MessageConstruct
 
   @encode: (message) ->
     construct = new MessageConstruct messageDef[message.type]
-    [typeConversion.typekey(message.type)].concat construct.encode(message)
+    [@getTypeKey(message.type)].concat construct.encode(message)
+
+  @getTypeKey: (val) ->
+    parseInt _.findKey(messageTypeMap, (type) -> type is val)
 
 module.exports =
   MessageConstruct: MessageConstruct
