@@ -7,24 +7,36 @@ exports.messageDef =
   'AUTHENTICATE': []
   'GOODBYE': [['details', 'dict'], ['reason', 'uri']]
   'HEARTBEAT': []
-  'ERROR': [['request.type', 'typekey'], ['request.id', 'id'], ['details', 'dict'], ['error', 'uri'], ['args', 'list', {optional: true}], ['kwargs', 'dict', {optional: true}]]
-  'PUBLISH': [['request.id', 'id'], ['options', 'dict'], ['topic', 'uri'], ['args', 'list', {optional: true}], ['kwargs', 'dict', {optional: true}]]
+  'ERROR': [['request.type', 'typekey'], ['request.id', 'id'],
+    ['details', 'dict'], ['error', 'uri'], ['args', 'list', {optional: true}],
+    ['kwargs', 'dict', {optional: true}]]
+  'PUBLISH': [['request.id', 'id'], ['options', 'dict'], ['topic', 'uri'],
+    ['args', 'list', {optional: true}], ['kwargs', 'dict', {optional: true}]]
   'PUBLISHED': [['publish.request.id', 'id'], ['publication.id', 'id']]
   'SUBSCRIBE': [['request.id', 'id'], ['options', 'dict'], ['topic', 'uri']]
   'SUBSCRIBED': [['subscribe.request.id', 'id'], ['subscription.id', 'id']]
   'UNSUBSCRIBE': [['request.id', 'id'], ['subscribed.subscription.id', 'id']]
   'UNSUBSCRIBED': [['unsubscribe.request.id', 'id']]
-  'EVENT': [['subscribed.subscription.id', 'id'], ['published.publication.id', 'id'], ['details', 'dict'], ['publish.args', 'list', {optional: true}], ['publish.kwargs', 'dict', {optional: true}]]
-  'CALL': [['request.id', 'id'], ['options', 'dict'], ['procedure', 'uri'], ['args', 'list', {optional: true}], ['kwargs', 'dict', {optional: true}]]
+  'EVENT': [['subscribed.subscription.id', 'id'],
+    ['published.publication.id', 'id'], ['details', 'dict'],
+    ['publish.args', 'list', {optional: true}],
+    ['publish.kwargs', 'dict', {optional: true}]]
+  'CALL': [['request.id', 'id'], ['options', 'dict'], ['procedure', 'uri'],
+    ['args', 'list', {optional: true}], ['kwargs', 'dict', {optional: true}]]
   'CANCEL': []
-  'RESULT': [['call.request.id', 'id'], ['options', 'dict'], ['yield.args', 'list', {optional: true}], ['yield.kwargs', 'dict', {optional: true}]]
+  'RESULT': [['call.request.id', 'id'], ['options', 'dict'],
+    ['yield.args', 'list', {optional: true}],
+    ['yield.kwargs', 'dict', {optional: true}]]
   'REGISTER': [['request.id', 'id'], ['options', 'dict'], ['procedure', 'uri']]
   'REGISTERED': [['register.request.id', 'id'], ['registration.id', 'id']]
   'UNREGISTER': [['request.id', 'id'], ['registered.registration.id', 'id']]
   'UNREGISTERED': [['unregister.request.id', 'id']]
-  'INVOCATION': [['request.id', 'id'], ['registered.registration.id', 'id'], ['details', 'dict'], ['call.args', 'list', {optional: true}], ['call.kwargs', 'dict', {optional: true}]]
+  'INVOCATION': [['request.id', 'id'], ['registered.registration.id', 'id'],
+    ['details', 'dict'], ['call.args', 'list', {optional: true}],
+    ['call.kwargs', 'dict', {optional: true}]]
   'INTERRUPT': []
-  'YIELD': [['invocation.request.id', 'id'], ['options', 'dict'], ['args', 'list', {optional: true}], ['kwargs', 'dict', {optional: true}]]
+  'YIELD': [['invocation.request.id', 'id'], ['options', 'dict'],
+    ['args', 'list', {optional: true}], ['kwargs', 'dict', {optional: true}]]
 
 exports.messageTypeMap =
   1: 'HELLO'

@@ -1,5 +1,5 @@
 _ = require 'lodash'
-{messageTypeMap, messageDef} = require 'message-types'
+{messageTypeMap, messageDef} = require './message-types'
 
 typeConversion =
   'typekey': (val) -> _.findKey(messageTypeMap, val)
@@ -24,7 +24,8 @@ class MessageConstruct
       val = message[property]
       convert = typeConversion[type]
       val = convert(val, opt) if convert?
-      throw new Error("#{property} value can't null") unless val? or opt.optional
+      unless val? or opt.optional
+        throw new Error("#{property} value can't null")
       resValue.push val if val?
     resValue
 
