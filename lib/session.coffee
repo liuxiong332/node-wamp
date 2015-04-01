@@ -1,4 +1,5 @@
 EventEmitter = require('events').EventEmitter
+messageParser
 
 class Session extends EventEmitter
   constructor: (socket, @supportedRoles) ->
@@ -11,3 +12,5 @@ class Session extends EventEmitter
 
     # socket.on 'close', (code, reason)
     @socket = socket
+
+  parse: (data) ->

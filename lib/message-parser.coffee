@@ -66,5 +66,4 @@ class MessageParser
   @getTypeKey: (val) ->
     parseInt _.findKey(messageTypeMap, (type) -> type is val)
 
-module.exports =
-  MessageParser: MessageParser
+module.exports = MessageParser
