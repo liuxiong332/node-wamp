@@ -25,3 +25,8 @@ describe 'in MessageConstruct', ->
     struct.add('args', 'list', {optional: true}).add('kwargs', 'dict', {optional: true})
     res = struct.decode ['val1', 'val2', 'val3']
     res.should.eql {a: {b: 'val1', a: 'val2'}, b: 'val3', args: [], kwargs: {}}
+
+  it 'should encode the message', ->
+    message = {a: {b: 'val1', a: 'val2'}, b: 'val3'}
+    struct = new messageParser.MessageConstruct [['a.b', 'string'], ['a.a', 'string'], ['b', 'string']]
+    struct.encode(message).should.eql ['val1', 'val2', 'val3']

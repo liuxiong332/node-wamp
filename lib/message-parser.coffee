@@ -4,9 +4,9 @@ _ = require 'lodash'
 typeConversion =
   'typekey': (val) -> _.findKey(messageTypeMap, val)
   'dict': (val, opt) ->
-    if opt.optional and _.isEqual(val, {}) then undefined else val
+    if opt?.optional and _.isEqual(val, {}) then undefined else val
   'list': (val, opt) ->
-    if opt.optional and _.isEqual(val, []) then undefined else val
+    if opt?.optional and _.isEqual(val, []) then undefined else val
 
 class MessageConstruct
   constructor: (@structure) ->
@@ -21,7 +21,7 @@ class MessageConstruct
   encode: (message) ->
     resValue = []
     @structure.forEach ([property, type, opt]) ->
-      val = message[property]
+      val = MessageConstruct.getDeepVal(message, property)
       convert = typeConversion[type]
       val = convert(val, opt) if convert?
       unless val? or opt.optional
@@ -41,6 +41,9 @@ class MessageConstruct
   # transfer the {'e1.e2': value} to {e1: {e2: value}}
   @getDeepObj: (path, value) ->
     _.reduceRight path.split('.'), ((obj, e) -> {"#{e}": obj}), value
+
+  @getDeepVal: (obj, path) ->
+    _.reduce path.split('.'), ((obj, e) -> obj[e]), obj
 
   @decode: (data) ->
     type = messageTypeMap[data.pop()]
