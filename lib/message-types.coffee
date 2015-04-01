@@ -1,65 +1,65 @@
 
 exports.messageDef =
-  'HELLO': [['realm', 'uri'], ['details', 'dict']]
-  'WELCOME': [['session.id', 'id'], ['details', 'dict']]
-  'ABORT': [['details', 'dict'], ['reason', 'uri']]
-  'CHALLENGE': []
-  'AUTHENTICATE': []
-  'GOODBYE': [['details', 'dict'], ['reason', 'uri']]
-  'HEARTBEAT': []
-  'ERROR': [['request.type', 'int'], ['request.id', 'id'],
+  'hello': [['realm', 'uri'], ['details', 'dict']]
+  'welcome': [['session.id', 'id'], ['details', 'dict']]
+  'abort': [['details', 'dict'], ['reason', 'uri']]
+  'challenge': []
+  'authenticate': []
+  'goodbye': [['details', 'dict'], ['reason', 'uri']]
+  'heartbeat': []
+  'error': [['request.type', 'int'], ['request.id', 'id'],
     ['details', 'dict'], ['error', 'uri'], ['args', 'list', {optional: true}],
     ['kwargs', 'dict', {optional: true}]]
-  'PUBLISH': [['request.id', 'id'], ['options', 'dict'], ['topic', 'uri'],
+  'publish': [['request.id', 'id'], ['options', 'dict'], ['topic', 'uri'],
     ['args', 'list', {optional: true}], ['kwargs', 'dict', {optional: true}]]
-  'PUBLISHED': [['publish.request.id', 'id'], ['publication.id', 'id']]
-  'SUBSCRIBE': [['request.id', 'id'], ['options', 'dict'], ['topic', 'uri']]
-  'SUBSCRIBED': [['subscribe.request.id', 'id'], ['subscription.id', 'id']]
-  'UNSUBSCRIBE': [['request.id', 'id'], ['subscribed.subscription.id', 'id']]
-  'UNSUBSCRIBED': [['unsubscribe.request.id', 'id']]
-  'EVENT': [['subscribed.subscription.id', 'id'],
+  'published': [['publish.request.id', 'id'], ['publication.id', 'id']]
+  'subscribe': [['request.id', 'id'], ['options', 'dict'], ['topic', 'uri']]
+  'subscribed': [['subscribe.request.id', 'id'], ['subscription.id', 'id']]
+  'unsubscribe': [['request.id', 'id'], ['subscribed.subscription.id', 'id']]
+  'unsubscribed': [['unsubscribe.request.id', 'id']]
+  'event': [['subscribed.subscription.id', 'id'],
     ['published.publication.id', 'id'], ['details', 'dict'],
     ['publish.args', 'list', {optional: true}],
     ['publish.kwargs', 'dict', {optional: true}]]
-  'CALL': [['request.id', 'id'], ['options', 'dict'], ['procedure', 'uri'],
+  'call': [['request.id', 'id'], ['options', 'dict'], ['procedure', 'uri'],
     ['args', 'list', {optional: true}], ['kwargs', 'dict', {optional: true}]]
-  'CANCEL': []
-  'RESULT': [['call.request.id', 'id'], ['options', 'dict'],
+  'cancel': []
+  'result': [['call.request.id', 'id'], ['options', 'dict'],
     ['yield.args', 'list', {optional: true}],
     ['yield.kwargs', 'dict', {optional: true}]]
-  'REGISTER': [['request.id', 'id'], ['options', 'dict'], ['procedure', 'uri']]
-  'REGISTERED': [['register.request.id', 'id'], ['registration.id', 'id']]
-  'UNREGISTER': [['request.id', 'id'], ['registered.registration.id', 'id']]
-  'UNREGISTERED': [['unregister.request.id', 'id']]
-  'INVOCATION': [['request.id', 'id'], ['registered.registration.id', 'id'],
+  'register': [['request.id', 'id'], ['options', 'dict'], ['procedure', 'uri']]
+  'registered': [['register.request.id', 'id'], ['registration.id', 'id']]
+  'unregister': [['request.id', 'id'], ['registered.registration.id', 'id']]
+  'unregistered': [['unregister.request.id', 'id']]
+  'invocation': [['request.id', 'id'], ['registered.registration.id', 'id'],
     ['details', 'dict'], ['call.args', 'list', {optional: true}],
     ['call.kwargs', 'dict', {optional: true}]]
-  'INTERRUPT': []
-  'YIELD': [['invocation.request.id', 'id'], ['options', 'dict'],
+  'interrupt': []
+  'yield': [['invocation.request.id', 'id'], ['options', 'dict'],
     ['args', 'list', {optional: true}], ['kwargs', 'dict', {optional: true}]]
 
 exports.messageTypeMap =
-  1: 'HELLO'
-  2: 'WELCOME'
-  3: 'ABORT'
-  4: 'CHALLENGE'
-  5: 'AUTHENTICATE'
-  6: 'GOODBYE'
-  8: 'ERROR'
-  16:	'PUBLISH'
-  17:	'PUBLISHED'
-  32:	'SUBSCRIBE'
-  33:	'SUBSCRIBED'
-  34:	'UNSUBSCRIBE'
-  35:	'UNSUBSCRIBED'
-  36:	'EVENT'
-  48:	'CALL'
-  49:	'CANCEL'
-  50:	'RESULT'
-  64:	'REGISTER'
-  65:	'REGISTERED'
-  66:	'UNREGISTER'
-  67:	'UNREGISTERED'
-  68:	'INVOCATION'
-  69:	'INTERRUPT'
-  70:	'YIELD'
+  1: 'hello'
+  2: 'welcome'
+  3: 'abort'
+  4: 'challenge'
+  5: 'authenticate'
+  6: 'goodbye'
+  8: 'error'
+  16:	'publish'
+  17:	'published'
+  32:	'subscribe'
+  33:	'subscribed'
+  34:	'unsubscribe'
+  35:	'unsubscribed'
+  36:	'event'
+  48:	'call'
+  49:	'cancel'
+  50:	'result'
+  64:	'register'
+  65:	'registered'
+  66:	'unregister'
+  67:	'unregistered'
+  68:	'invocation'
+  69:	'interrupt'
+  70:	'yield'
