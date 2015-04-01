@@ -22,7 +22,6 @@ describe 'in MessageConstruct', ->
     res = struct.decode ['val1', 'val2', 'val3']
     res.should.eql {a: {b: 'val1', a: 'val2'}, b: 'val3'}
 
-    struct.add('args', 'id').add('kwargs', 'id')
+    struct.add('args', 'list', {optional: true}).add('kwargs', 'dict', {optional: true})
     res = struct.decode ['val1', 'val2', 'val3']
     res.should.eql {a: {b: 'val1', a: 'val2'}, b: 'val3', args: [], kwargs: {}}
-
