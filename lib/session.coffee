@@ -16,6 +16,9 @@ class Session extends EventEmitter
     # socket.on 'close', (code, reason)
     @socket = socket
 
+  close: (reason, wasClean) ->
+    @send 'goodbye', details: {message: 'Close connection'}, reason: reason
+
   parse: (data) ->
     msg = MessageParser.decode data
     this[msg.type].call(this, msg)
@@ -34,3 +37,31 @@ class Session extends EventEmitter
     @send 'welcome',
       session: id: @id
       details: roles: @roles
+
+  goodbye: (msg) ->
+    @close(msg.reason)
+
+  subscribe: (msg) ->
+    topicId = @realm.subscribe msg.topic, this
+    @send 'subscribed',
+      subscribe: request: id: msg.request.id
+      subscription: id: topicId
+
+  unsubscribe: (msg) ->
+    @realm.unsubscribe(msg.subscribed.subscription.id, this)
+    @send 'unsubscribed',
+      unsubscribe: request: id: message
+
+  publish: (msg) ->
+    publicationId = _.random(0, Math.pow(2, 53))
+    topic = @realm.publish(msg.topic)
+    topic.forEach (session) ->
+      session.send 'event',
+        subscribed: subscription: id: topic.id
+        published: publication: id: publicationId
+        details: {}
+        publish: {args: msg.args, kwargs: msg.kwargs}
+    if msg.options?.acknowledge
+      @send 'published',
+        publish: request: id: msg.request.id
+        publication: id: publicationId
