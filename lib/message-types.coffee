@@ -7,7 +7,7 @@ exports.messageDef =
   'AUTHENTICATE': []
   'GOODBYE': [['details', 'dict'], ['reason', 'uri']]
   'HEARTBEAT': []
-  'ERROR': [['request.type', 'typekey'], ['request.id', 'id'],
+  'ERROR': [['request.type', 'int'], ['request.id', 'id'],
     ['details', 'dict'], ['error', 'uri'], ['args', 'list', {optional: true}],
     ['kwargs', 'dict', {optional: true}]]
   'PUBLISH': [['request.id', 'id'], ['options', 'dict'], ['topic', 'uri'],

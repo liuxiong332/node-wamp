@@ -2,12 +2,12 @@
 messageParser = require '../lib/message-parser'
 should = require 'should'
 util = require 'util'
+_ = require 'lodash'
 
 describe 'in MessageConstruct', ->
 
   it 'method getDeepObj run correctly', ->
     getDeepObj = messageParser.MessageConstruct.getDeepObj
-    util.log getDeepObj('e1', 'value')
 
     getDeepObj('e1', 'value').should.eql {'e1': 'value'}
     getDeepObj('e1.e2', 'value').should.eql {'e1': {e2: 'value'}}
@@ -30,3 +30,9 @@ describe 'in MessageConstruct', ->
     message = {a: {b: 'val1', a: 'val2'}, b: 'val3'}
     struct = new messageParser.MessageConstruct [['a.b', 'string'], ['a.a', 'string'], ['b', 'string']]
     struct.encode(message).should.eql ['val1', 'val2', 'val3']
+
+  describe 'in MessageConstruct class context', ->
+    it 'should decode and encode the message', ->
+      require('./fixture/messages').messages.forEach (data) ->
+        msg = messageParser.MessageConstruct.decode _.cloneDeep(data)
+        messageParser.MessageConstruct.encode(msg).should.eql(data)
