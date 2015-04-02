@@ -3,6 +3,7 @@ should = require 'should'
 autobahn = require 'autobahn'
 util = require 'util'
 q = require 'q'
+realmManager = require '../../lib/realm-manager'
 
 WebSocketServer = require('ws').Server
 http = require 'http'
@@ -19,8 +20,7 @@ describe 'in RouteServer', ->
   it 'connect to server', (done) ->
     WebSocket = require('ws')
     ws = new WebSocket 'ws://localhost:8080/'
-    ws.on 'open', ->
-      done()
+    ws.on 'open', -> done()
 
   it 'autobahn can connect to server', (done) ->
     router.sessions.size.should.equal 0
@@ -28,9 +28,31 @@ describe 'in RouteServer', ->
     # connDefer = q.defer()
     conn.open()
     conn.onopen = (session) ->
-      util.log 'connect to localhost successfully!'
-      router.sessions.size.should.equal 1
+      util.log 'client connect to localhost successfully!'
       conn.close()
 
     conn.onclose = (reason, details) ->
+      util.log 'client close completely!'
+
+    router.onDidAttachSession (session) ->
+      router.sessions.size.should.equal 1
+      session.getRealm().should.equal realmManager.get('r1')
+      realmManager.get('r1').hasSession(session).should.true
+
+    router.onDidCloseSession (session) ->
+      router.sessions.size.should.equal 0
+      realmManager.get('r1').hasSession(session).should.false
       done()
+
+  describe 'subscribe and publish feature', ->
+    conn = null
+    beforeEach (done) ->
+      conn = new autobahn.Connection {url: 'ws://localhost:8080/', realm: 'r1'}
+      conn.onopen = (session) -> done()
+      conn.open()
+
+    afterEach (done) ->
+      conn.close()
+      router.onDidCloseSession (session) -> done()
+
+    it 'subscribe and unsubscribe', ->

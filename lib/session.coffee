@@ -15,26 +15,27 @@ class Session extends EventEmitter
       console.error("websocket error, #{err.stack}")
 
     socket.on 'close', (code, reason) =>
-      @close(reason)
+      @onDidClose(code, reason)
 
     @socket = socket
     @subscribeTopics = new Set
 
-  close: (reason) ->
+  onDidClose: (code, reason) ->
     @realm?.removeSession this
     @realm = null
-    @emit 'close'
     @subscribeTopics.forEach (topic) => topic.removeSession this
     @subscribeTopics.clear()
+    @emit 'did-close'
 
   parse: (data) ->
     data = JSON.parse(data)
     msg = MessageParser.decode data
     this[msg.type].call(this, msg)
 
+  getRealm: -> @realm
+
   send: (type, args) ->
     data = MessageParser.encode _.assign(args, type: type)
-    util.log data
     @socket.send JSON.stringify(data), (err) ->
       throw new Error("send #{type} message error, #{err}") if err?
 
@@ -44,13 +45,14 @@ class Session extends EventEmitter
     @realm = realmManager.get(msg.realm)
     @realm.addSession(this)
 
+    @emit 'did-attach'
     @send 'welcome',
       session: id: @id
       details: roles: @roles
 
   goodbye: (msg) ->
     @send 'goodbye', details: {message: 'Close connection'}, reason: msg.reason
-    @close(msg.reason)
+    @socket.close(1000, msg.reason)
 
   subscribe: (msg) ->
     topic = @realm.subscribe msg.topic, this

@@ -5,6 +5,8 @@ class Topic
     @id = _.random(0, Math.pow(2, 53))
     @sessions = new Set
 
+  getId: -> @id
+
   addSession: (session) ->
     @sessions.add session
 
@@ -46,6 +48,9 @@ class Realm
 
   removeSession: (session) ->
     @sessions.delete session
+
+  hasSession: (session) ->
+    @sessions.has session
 
   getTopic: (uri) ->
     @topics.getTopicByUri(uri)
