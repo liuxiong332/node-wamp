@@ -2,7 +2,7 @@ _ = require 'lodash'
 
 class Topic
   constructor: ->
-    @id = _.random(0, Math.pow(0, 53))
+    @id = _.random(0, Math.pow(2, 53))
     @sessions = new Set
 
   addSession: (session) ->
@@ -14,6 +14,9 @@ class Topic
   forEach: (callback) ->
     @sessions.forEach callback
 
+  hasSession: (session) ->
+    @sessions.has session
+
 class TopicSet
   constructor: ->
     @idTopics = new Map
@@ -21,17 +24,17 @@ class TopicSet
 
   createTopic: (uri) ->
     topic = new Topic
-    @idTopics.add topic.id, topic
-    @uriTopics.add uri, topic
+    @idTopics.set topic.id, topic
+    @uriTopics.set uri, topic
     topic
 
   getTopicByUri: (uri) ->
-    topic = @uriTopics[uri]
+    topic = @uriTopics.get uri
     topic = @createTopic(uri) unless topic?
     topic
 
   getTopicById: (id) ->
-    @idTopics[id]
+    @idTopics.get id
 
 class Realm
   constructor: ->

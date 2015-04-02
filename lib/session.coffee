@@ -50,7 +50,7 @@ class Session extends EventEmitter
   unsubscribe: (msg) ->
     @realm.unsubscribe(msg.subscribed.subscription.id, this)
     @send 'unsubscribed',
-      unsubscribe: request: id: message
+      unsubscribe: request: id: msg.request.id
 
   publish: (msg) ->
     publicationId = _.random(0, Math.pow(2, 53))
