@@ -45,10 +45,12 @@ describe 'in RouteServer', ->
       done()
 
   describe 'subscribe and publish feature', ->
-    conn = null
+    [conn, clientSession] = null
     beforeEach (done) ->
       conn = new autobahn.Connection {url: 'ws://localhost:8080/', realm: 'r1'}
-      conn.onopen = (session) -> done()
+      conn.onopen = (session) ->
+        clientSession = session
+        done()
       conn.open()
 
     afterEach (done) ->
@@ -56,3 +58,5 @@ describe 'in RouteServer', ->
       router.onDidCloseSession (session) -> done()
 
     it 'subscribe and unsubscribe', ->
+      clientSession.subscribe 'myapp.hello', (args) ->
+        console.log("Event:", args[0]);
