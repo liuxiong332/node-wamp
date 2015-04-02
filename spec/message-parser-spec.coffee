@@ -14,11 +14,11 @@ describe 'in MessageParser', ->
     getDeepObj('e1.e2.e3', 'value').should.eql {'e1': {e2: {e3: 'value'}}}
 
   it 'should decode the json data', ->
-    struct = new MessageParser [['prop1', 'id'], ['prop2', 'id']]
+    struct = new MessageParser [['prop1', 'string'], ['prop2', 'string']]
     res = struct.decode ['hello', 'world']
     res.should.eql {prop1: 'hello', prop2: 'world'}
 
-    struct = new MessageParser [['a.b', 'id'], ['a.a', 'id'], ['b', 'id']]
+    struct = new MessageParser [['a.b', 'string'], ['a.a', 'string'], ['b', 'string']]
     res = struct.decode ['val1', 'val2', 'val3']
     res.should.eql {a: {b: 'val1', a: 'val2'}, b: 'val3'}
 

@@ -2,6 +2,7 @@ EventEmitter = require('events').EventEmitter
 MessageParser = require './message-parser'
 realmManager = require './realm-manager'
 _ = require 'lodash'
+util = require 'util'
 
 module.exports =
 class Session extends EventEmitter
@@ -20,20 +21,22 @@ class Session extends EventEmitter
     @subscribeTopics = new Set
 
   close: (reason) ->
-    @realm.removeSession this
+    @realm?.removeSession this
     @realm = null
     @emit 'close'
     @subscribeTopics.forEach (topic) => topic.removeSession this
     @subscribeTopics.clear()
 
   parse: (data) ->
+    data = JSON.parse(data)
     msg = MessageParser.decode data
     this[msg.type].call(this, msg)
 
   send: (type, args) ->
     data = MessageParser.encode _.assign(args, type: type)
-    @socket.send data, (err) ->
-      console.error "send #{type} message error, #{err}"
+    util.log data
+    @socket.send JSON.stringify(data), (err) ->
+      throw new Error("send #{type} message error, #{err}") if err?
 
   hello: (msg) ->
     @id = _.random(0, Math.pow(2, 53))
