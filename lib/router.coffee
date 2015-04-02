@@ -1,24 +1,24 @@
-
+Session = require './session'
 WebSocketServer = require('ws').Server
 http = require('http')
 util = require('util')
 
 class Router extends WebSocketServer
   constructor: (opts = {}) ->
+    @createServer opts
+    super {server: @server, path: '/'}
+    @operateEvent
+    @sessions = new Set
+
+  createServer: (opts) ->
     server = opts.server ? http.createServer (req, res) ->
       res.writeHead(404)
       res.end('This is WAMP transport. Please connect over WebSocket!')
 
-    server.on 'error', (err) ->
-      throw new Error('httpServer error: ' + err.stack)
-
     port = opts.port ? 8080
     server.listen port, ->
       util.log('bound and listen at: ' + port)
-
-    super {server: server, path: '/'}
     @server = server
-    @operateEvent
 
   operateEvent: ->
     @on 'error', (err) ->
@@ -26,6 +26,9 @@ class Router extends WebSocketServer
 
     @on 'connection', (socket) ->
       util.log 'connection'
+      session = new Session socket, {broker: {}, dealer: {}}
+      @sessions.add session
+      session.on 'close', => @sessions.delete session
 
   close: ->
     @server.close()

@@ -10,14 +10,21 @@ class Session extends EventEmitter
     socket.on 'message', (data) =>
       @parse(data)
 
-    socket.on 'error', (err) =>
-      @close(null, null, false)
+    socket.on 'error', (err) ->
+      console.error("websocket error, #{err.stack}")
 
-    # socket.on 'close', (code, reason)
+    socket.on 'close', (code, reason) =>
+      @close(reason)
+
     @socket = socket
+    @subscribeTopics = new Set
 
-  close: (reason, wasClean) ->
-    @send 'goodbye', details: {message: 'Close connection'}, reason: reason
+  close: (reason) ->
+    @realm.removeSession this
+    @realm = null
+    @emit 'close'
+    @subscribeTopics.forEach (topic) => topic.removeSession this
+    @subscribeTopics.clear()
 
   parse: (data) ->
     msg = MessageParser.decode data
@@ -39,16 +46,19 @@ class Session extends EventEmitter
       details: roles: @roles
 
   goodbye: (msg) ->
+    @send 'goodbye', details: {message: 'Close connection'}, reason: msg.reason
     @close(msg.reason)
 
   subscribe: (msg) ->
-    topicId = @realm.subscribe msg.topic, this
+    topic = @realm.subscribe msg.topic, this
+    @subscribeTopics.add topic
     @send 'subscribed',
       subscribe: request: id: msg.request.id
-      subscription: id: topicId
+      subscription: id: topic.id
 
   unsubscribe: (msg) ->
-    @realm.unsubscribe(msg.subscribed.subscription.id, this)
+    topic = @realm.unsubscribe(msg.subscribed.subscription.id, this)
+    @subscribeTopics.delete topic
     @send 'unsubscribed',
       unsubscribe: request: id: msg.request.id
 

@@ -53,11 +53,12 @@ class Realm
   subscribe: (topicUri, session) ->
     topic = @topics.getTopicByUri(topicUri)
     topic.addSession(session)
-    topic.id
+    topic
 
   unsubscribe: (id, session) ->
     topic = @topics.getTopicById(id)
     topic.removeSession(session)
+    topic
 
   publish: (uri) ->
     @topics.getTopicByUri(uri)
