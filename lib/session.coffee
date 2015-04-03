@@ -27,6 +27,15 @@ class Session extends EventEmitter
     @subscribeTopics.clear()
     @emit 'did-close'
 
+  onDidSubscribe: (callback) ->
+    @on 'did-subscribe', callback
+
+  onDidUnsubscribe: (callback) ->
+    @on 'did-unsubscribe', callback
+
+  onDidPublish: (callback) ->
+    @on 'did-publish', callback
+
   parse: (data) ->
     data = JSON.parse(data)
     msg = MessageParser.decode data
@@ -57,6 +66,7 @@ class Session extends EventEmitter
   subscribe: (msg) ->
     topic = @realm.subscribe msg.topic, this
     @subscribeTopics.add topic
+    @emit 'did-subscribe', topic
     @send 'subscribed',
       subscribe: request: id: msg.request.id
       subscription: id: topic.id
@@ -64,6 +74,7 @@ class Session extends EventEmitter
   unsubscribe: (msg) ->
     topic = @realm.unsubscribe(msg.subscribed.subscription.id, this)
     @subscribeTopics.delete topic
+    @emit 'did-unsubscribe', topic
     @send 'unsubscribed',
       unsubscribe: request: id: msg.request.id
 
@@ -76,6 +87,8 @@ class Session extends EventEmitter
         published: publication: id: publicationId
         details: {}
         publish: {args: msg.args, kwargs: msg.kwargs}
+
+    @emit 'did-publish', topic
     if msg.options?.acknowledge
       @send 'published',
         publish: request: id: msg.request.id
